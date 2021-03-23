@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Intro to unit tests &middot; Rattle on</title>
+    <meta name="description" content="Article about what are unit tests, how they help you and how to avoid common pitfalls." />
+    <link rel="shortcut icon"  href="https://mbobesic.github.io/rattle-on/favicon.ico" />
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="https://mbobesic.github.io/rattle-on/atom.xml">
+
+    <style>html,body{background:#fffaf7;color:#2d2d2d;font:16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"}a,a:visited{color:darkred;text-decoration:none}a:hover{text-decoration:underline}main{margin:auto;max-width:38rem;padding:0.8rem}pre{background:white;overflow:scroll;padding:1rem}td{border:1px solid #2d2d2d;padding:10px}img{height:auto;max-width:100%}.homepage-list{list-style:none;padding:1rem 0}.homepage-list li{align-items:center;display:flex;flex-wrap:wrap;justify-content:space-between;margin-bottom:10px}@media (max-width: 38rem){.homepage-list li a{width:100%}}
+</style>
+
+    <meta property="og:site_name" content="Rattle on">
+      
+      <meta property="og:title" content="Intro to unit tests">
+      <meta property="og:description" content="Article about what are unit tests, how they help you and how to avoid common pitfalls.">
+      <meta property="og:url" content="https://mbobesic.github.io/rattle-on/unittests/">
+      <meta property="og:image" content="">
+
+      <meta property="og:type" content="article" />
+        <meta property="article:published_time" content="2021-02-26T00:00:00+00:00" />
+
+      
+      <link rel="next" href="https://mbobesic.github.io/rattle-on/klmux/" />
+    
+
+  </head>
+  
+
+  <body>
+    <main id="main" role="main">
+
+      
+      <header role="banner">
+        <h3 style="margin-top:0;">
+          <a href="https://mbobesic.github.io/rattle-on/" title="Home">Rattle on</a>
+          <br /><small>A dump of rants, ideas and explanations. Writing is nature&#x27;s way of telling us how lousy our thinking is.</small>
+        </h3>
+      </header>
+      <hr />
+      
+
+      
+<article>
+  <h1>Intro to unit tests</h1>
+
+  
+    <p style="font-size:90%;">Posted on <time datetime="2021-02-26T00:00:00+00:00">February 26, 2021</time></p>
+  
+
+  <p>It seems like unit tests are the biggest problem every time an intern/junior developer joins the team. As a intro to world of unit tests I decided to write yet another article about unit tests.</p>
+<h2 id="what-are-unit-tests">What are unit tests</h2>
+<p>Commonly for software engineering, there is plenty of definitions. Just google it and you will find more than enough. Rather than using the definition, I'll just point out important characteristics of unit tests:</p>
+<ul>
+<li>they test smallest unit of code</li>
+<li>unit is tested independently from other units</li>
+<li>fast to run</li>
+<li>written by developers</li>
+</ul>
+<h2 id="what-are-unit-tests-good-for">What are unit tests good for</h2>
+<p>Well, not for catching bugs. At least not the first time you write the code. Unit tests are good for:</p>
+<ol>
+<li><a href="https://mbobesic.github.io/rattle-on/unittests/#testing">Testing if your code sucks</a></li>
+<li><a href="https://mbobesic.github.io/rattle-on/unittests/#qfl">Quick feedback loop</a></li>
+<li><a href="https://mbobesic.github.io/rattle-on/unittests/#gfc">Getting familiar with the code when you didn't write it (or it was you months ago)</a></li>
+<li><a href="https://mbobesic.github.io/rattle-on/unittests/#cb">Catching bugs when you refactor (when changing implementation details, not behavior)</a></li>
+</ol>
+<h3 id="testing">Testing if your code sucks</h3>
+<p>If your unit tests are difficult to write, it usually means something is wrong with the code. And this is the biggest use case for unit tests.
+Some possible causes are:</p>
+<ul>
+<li>The code is too coupled</li>
+<li>Single responsibility principle violations</li>
+<li>Using inheritance instead of composition</li>
+<li>Violations of open-closed principle</li>
+</ul>
+<p>Now the bad news. Dijkstra said testing can prove existence of bugs, but never absence of them. Similarly, unit tests can prove your code sucks, but can't prove it doesn't.</p>
+<h3 id="qfl">Quick feedback loop</h3>
+<p>Unit tests give us quick feedback loop to confirm or deny our expectations from the code. I have seen so many times people dropping jars on a server just to test couple of lines of code change. Doing so increases testing time from seconds to minutes.</p>
+<h3 id="gfc">Getting familiar with the code</h3>
+<p>No matter how much we try, old code is rarely easy to read, even if it was written only couple of months ago. Best code practices are changing and reading code from 5 years or more can be exhausting. Unit tests are form of documentation which tells us how the code is supposed to work.</p>
+<p>Quick feedback loop plays a role here too. If you are not sure about some part of the code, change it and see what fails. Learn about the code, do the test and confirm or refute your understanding.</p>
+<h3 id="cb">Catching bugs</h3>
+<p>When first writing unit tests, they rarely find bugs. If your design is wrong, your unit tests will be wrong (<em>side note: fixing a bug isn't cheapest in development, but in design</em>). The type of bugs found in first iteration are usually simple bugs caused by accidentally autocompleting something wrong or something trivial like that. That's not to say they can't be extremely painful to find.</p>
+<p>But they do catch bugs when changing implementation without changing behavior. And at least make refactoring a bit less risky.</p>
+<h2 id="writing-unit-tests-is-easy">Writing unit tests is easy...</h2>
+<p>Answering following 3 questions is all that is needed:</p>
+<ol>
+<li>What behavior are you validating?</li>
+<li>What are the inputs?</li>
+<li>What is expected output/behavior?</li>
+</ol>
+<h2 id="writing-testable-code-is-hard">... writing testable code is hard</h2>
+<p>Methods ordered by &quot;how easy to test&quot; are:</p>
+<ol>
+<li>Pure functions</li>
+<li>Methods without side effects</li>
+<li>Methods that do only one thing</li>
+<li>Other methods</li>
+</ol>
+<p>Pure functions are functions whose output depends only on function/method parameters and produces no side effects. Inputs to unit tests are function parameters and output is return value.</p>
+<p>As methods without side effects I consider methods that don't change state but depend on it in it's computation. Inputs are coming from object state and possibly function parameters. Output is return value.</p>
+<p>Methods that do only one thing are not pure functions or methods without side effects are next. Their inputs are object state or possibly function parameters (can be either or both). In this case we don't have output, but expected behavior. Expected behavior is either change in state of the object xor invoking method on another object.</p>
+<p>And as far as all others are concerned, please no. Everything else means it returns a value and changes state. Change in state can be in current object and delegated further on a different object. In any case, it means we are both changing the state and returning a value and by doing so violating single responsibility principle.</p>
+<p>Prefer pure functions and immutable objects. They will make your life easier.</p>
+<h2 id="testing-code-smells">Testing code smells</h2>
+<p>There is great <a href="http://misko.hevery.com/attachments/Guide-Writing%20Testable%20Code.pdf">article</a> by Misko Hevery about this topic so I won't go into it, I'll just list the smells I found most often:</p>
+<ul>
+<li>Constructor does real work</li>
+<li>Mixing object creation with business logic (not using DI)</li>
+<li>Digging into collaborators</li>
+<li>Global state</li>
+<li>Class does too much</li>
+<li>Conditional Slalom</li>
+<li>Pass around giant context object</li>
+<li>Side effects</li>
+<li>Deep inheritance</li>
+<li>Static methods which are not pure functions</li>
+</ul>
+<h2 id="unit-test-smells">Unit test smells</h2>
+<p>In <a href="https://pragprog.com/book/utj/pragmatic-unit-testing-in-java-with-junit">Pragmatic Unit Testing in Java</a> Hunt and Thomas say:
+<em>&quot;If the answer is not obvious, or it looks like the test would be ugly or hard to write, then take that as a warning signal. Your design probably needs to be modified; change things around until the code is easy to test, and your design will end up being far better for the effort.&quot;</em></p>
+<p>Some of the unit tests smells which suggest code probably should be refactored are:</p>
+<h3 id="unit-testing-private-methods">Unit testing private methods</h3>
+<p>Unit tests should test behavior, not implementation details. Quick sort and merge sort should have identical unit tests. If you do fell the need to unit test private methods, it usually means that class is too big and should be refactored.
+Unit testing private methods also has bigger effect on technical dept as you lose static typing and any help your IDE might provide when refactoring.</p>
+<h3 id="setting-and-accessing-internal-object-state">Setting and Accessing internal object state</h3>
+<p>State should have initial value. Initial values should be set in constructor. We can easily pass the expected value to the constructor. If the value isn't available at the construction time, it should be a method parameter.</p>
+<h3 id="using-library-like-powermock">Using library like PowerMock</h3>
+<p><a href="https://github.com/powermock/powermock">Power mock</a> library says: <em>Please note that PowerMock is mainly intended for people with expert knowledge in unit testing. Putting it in the hands of junior developers may cause more harm than good.</em></p>
+<p>Sometimes it's needed. Most of the time, it's not. If you are not sure if you need PowerMock, you probably don't.</p>
+<h3 id="testing-multiple-behaviors-in-one-test">Testing multiple behaviors in one test</h3>
+<p>Testing multiple behaviors in one test suggests Single Responsibility Principle violations. If not in the method being tested, then in the test itself.</p>
+<h3 id="unit-tests-are-not-independent">Unit tests are not independent</h3>
+<p>If we want to test two methods, that's are functional tests. Otherwise unit tests should be independent. Difficulty writing independent tests can mean that methods aren't independent either.</p>
+<h3 id="unnecessary-preconditions">Unnecessary preconditions</h3>
+<p>When coming to code for the first time, you rely on reading the code and unit tests. Unnecessary preconditions are lying and make understanding old code even more difficult.</p>
+<h3 id="unnecessary-assertions">Unnecessary assertions</h3>
+<p>Similar to unnecessary preconditions, but with one additional issue. Developer will think unnecessary assertions were part of original requirements. There are plenty of requirements even without us artificially adding new ones.</p>
+<h3 id="common-setup-before-in-java-code-not-used-by-all-methods">Common setup(@Before in java) code not used by all methods</h3>
+<p>It actually means there are unnecessary preconditions, probably in multiple tests. Additionally, it can also suggest class is too big.</p>
+<h3 id="forgetting-about-clean-code-in-tests">Forgetting about clean code in tests</h3>
+<p>Unit tests will be read and maintained, just as normal code will be read, with the costs of maintaining them. Technical dept applies to unit tests too.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Unit tests are not a silver bullet, but they are helpful tool which can help you write better code and iterate faster. On other hand, maintaining unit tests on untestable code can make your life extremely painful and make you move even slower.</p>
+
+</article>
+
+
+      
+      <footer role="contentinfo">
+        <hr />
+        
+        
+        <small>Built with <a href="https://www.getzola.org/">Zola</a>.<br />
+          Maintained with &hearts; for the web.<br />
+          
+        </small>
+        
+      </footer>
+      
+
+    </main>
+    
+    
+  </body>
+</html>
+

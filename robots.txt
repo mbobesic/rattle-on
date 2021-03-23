@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mbobesic.github.io/rattle-on/sitemap.xml

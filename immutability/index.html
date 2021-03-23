@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Immutability - what&#x27;s it all about &middot; Rattle on</title>
+    <meta name="description" content="Yet another article about immutability" />
+    <link rel="shortcut icon"  href="https://mbobesic.github.io/rattle-on/favicon.ico" />
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="https://mbobesic.github.io/rattle-on/atom.xml">
+
+    <style>html,body{background:#fffaf7;color:#2d2d2d;font:16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"}a,a:visited{color:darkred;text-decoration:none}a:hover{text-decoration:underline}main{margin:auto;max-width:38rem;padding:0.8rem}pre{background:white;overflow:scroll;padding:1rem}td{border:1px solid #2d2d2d;padding:10px}img{height:auto;max-width:100%}.homepage-list{list-style:none;padding:1rem 0}.homepage-list li{align-items:center;display:flex;flex-wrap:wrap;justify-content:space-between;margin-bottom:10px}@media (max-width: 38rem){.homepage-list li a{width:100%}}
+</style>
+
+    <meta property="og:site_name" content="Rattle on">
+      
+      <meta property="og:title" content="Immutability - what&#x27;s it all about">
+      <meta property="og:description" content="Yet another article about immutability">
+      <meta property="og:url" content="https://mbobesic.github.io/rattle-on/immutability/">
+      <meta property="og:image" content="">
+
+      <meta property="og:type" content="article" />
+        <meta property="article:published_time" content="2021-03-16T00:00:00+00:00" />
+
+      <link rel="prev" href="https://mbobesic.github.io/rattle-on/klmux/" />
+      
+    
+
+  </head>
+  
+
+  <body>
+    <main id="main" role="main">
+
+      
+      <header role="banner">
+        <h3 style="margin-top:0;">
+          <a href="https://mbobesic.github.io/rattle-on/" title="Home">Rattle on</a>
+          <br /><small>A dump of rants, ideas and explanations. Writing is nature&#x27;s way of telling us how lousy our thinking is.</small>
+        </h3>
+      </header>
+      <hr />
+      
+
+      
+<article>
+  <h1>Immutability - what&#x27;s it all about</h1>
+
+  
+    <p style="font-size:90%;">Posted on <time datetime="2021-03-16T00:00:00+00:00">March 16, 2021</time></p>
+  
+
+  <p>Recently I've been interviewing more than usual and I've been surprised how often immutability seems to be poorly understood or considered irrelevant. Most of the time when I ask about immutability, the answer I get is - <em>It makes dealing with concurrency easier.</em> </p>
+<p>It reminds me of how often &quot;it's easy to implement undo&quot; was brought into discussion when immutability started reaching frontend world. And yes, immutability makes concurrency easier, it makes it easy to implement undo, but that's missing the big picture. </p>
+<p>Immutability is mainly identified with functional programming, but it's benefits have been well known to OO community too. <a href="https://bookshop.org/books/effective-java-9780134685991/9780134685991">Effective Java</a>, with first edition released 2001, has a chapter titled &quot;Minimize mutability&quot; which details why immutability is important and ends with following advice &quot;Classes should be immutable unless there's a very good reason to make them mutable&quot;. Yet immutability seems quite foreign to OO programmers. </p>
+<p>Immutable object is an object which can't be modified after it's initialized. If we step aside from OO world, it's memory which can't be modified after it has been initialized. What this means is that objects state is decided on during creation time and only creation time. If you want to mutate the object, you have to create a new one. </p>
+<h4 id="so-what-s-the-big-deal">So what's the big deal?</h4>
+<p>Simply put, immutability makes it easier to think about your code and harder to write bad code. It is achieved through various mechanisms that I'll try to list them here.</p>
+<p><strong>Invariant</strong> is a set of properties which remain true during objects lifecycle. In practice, it's a contract between class creator and class users which tells users how the class behaves. In OO, encapsulation is the way of maintaining class invariant - state isn't accessible from the outside and object itself maintains it after every method call. Keeping the invariant this way can get tricky. And even then, often there are some weird edge state transitions which break the invariant. </p>
+<p>With immutability, invariant is established the moment object is created and can never be violated. This also gives us what Bloch calls <strong>failure atomicity</strong> for free. If object is instantiated correctly, it will always be in valid state. It's impossible for object to be in temporary inconsistent state.</p>
+<p>Closely related is <strong>reduced state space</strong>. Mental process used for reasoning about the code often resolves around mental simulation of code behavior. As number of states grows, number of possible scenarios grows exponentially and effectiveness of our reasoning plummets. Immutable objects can be in only one state, the one they were created at. The reduced state space makes it possible for us to reason about the code.</p>
+<p>This also translates to <strong>easier testing and debugging</strong>. If it's easier to reason about the code, it's easier to test and debug. Captain Obvious quote right there. And it doesn't stop there. How many times did you have to get the object in some specific state to reproduce the bug? With immutability this isn't a problem, if you can't create the object in certain state, it can't get into that state. Simple as that. </p>
+<p><strong>Sharing</strong> is another benefit. It obviously includes previously mentioned concurrency, but it's also more than that. You can share the internals of immutable object or data structure. In the end, that's how efficient persistent data structures work. By knowing underlying structure can't change, you can just reuse the internal structure. How many times have you defensively copied an object? With immutable object there's no need. And then there's concurrency. Immutable objects lend itself to concurrency because one thread can't change it underneath other one. Immutable objects make dealing with concurrency as easy as possible.</p>
+<p><strong>Imperative programming is harder</strong> when using immutable data. And yes, this is a good thing, Imperative programming uses statements to change program's state. And by now we should be aware that state = bad. </p>
+<p>Immutable data is <strong>easier to use as building block</strong> of different objects. The extreme case of this is using it in maps or sets. What does it mean if an object inside of HashSet mutates? How should the set behave? It also makes it more natural to compose objects. Inheritance comes with it's own set of problems and composition is generally the way to go. </p>
+<h4 id="if-immutability-is-so-awesome-why-isn-t-it-everywhere">If immutability is so awesome, why isn't it everywhere?</h4>
+<p>Turns out there was a very good reason for that - performance. Historically, memory was expensive. NASA has sent man to the moon with memory that can be found in car keys today. When every byte matters, immutability just isn't feasible. Performance is also a reason why mutable languages, just like low level languages are still needed. </p>
+<p>The good news is memory got cheap. Most of our systems aren't resource constrained anymore and today immutability is feasible almost everywhere.</p>
+<h4 id="immutability-changes-everything">Immutability changes everything</h4>
+<p>I've shamelessly stolen the subtitle here from Pat Helland's paper<sup class="footnote-reference"><a href="#first">1</a></sup>, but I find it appropriate. It seems counterintuitive that adding constraints makes programming easier. It's a trade off between how hard it is to write the code and how hard it is to read, test and think about it. In the end, we're writing it only once, but reading it multiple times. I'll finish off repeating the quote from Effective Java:</p>
+<blockquote>
+<p>Classes should be immutable unless there's a very good reason to make them mutable. </p>
+</blockquote>
+<h4 id="references">References</h4>
+<ol>
+<li><a href="https://bookshop.org/books/effective-java-9780134685991/9780134685991">Effective Java</a></li>
+<li><a href="http://curtclifton.net/papers/MoseleyMarks06a.pdf">Out of the Tar Pit</a></li>
+<li><a href="https://www.infoq.com/presentations/Value-Values/">The Value of Values</a></li>
+<li><a href="https://vimeo.com/234107745">Refactoring to Immutability</a></li>
+<li><a href="https://bookshop.org/books/the-joy-of-clojure/9781617291418">The Joy of Clojure</a></li>
+</ol>
+<h4 id="footnotes">Footnotes</h4>
+<div class="footnote-definition" id="first"><sup class="footnote-definition-label">1</sup>
+<p>Pat Helland's <a href="http://cidrdb.org/cidr2015/Papers/CIDR15_Paper16.pdf">paper</a> talks about immutability in distributed context though, think HDFS as an example, while this article is more about lower level.</p>
+</div>
+
+</article>
+
+
+      
+      <footer role="contentinfo">
+        <hr />
+        
+        
+        <small>Built with <a href="https://www.getzola.org/">Zola</a>.<br />
+          Maintained with &hearts; for the web.<br />
+          
+        </small>
+        
+      </footer>
+      
+
+    </main>
+    
+    
+  </body>
+</html>
+
