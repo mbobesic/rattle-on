@@ -1,5 +1,5 @@
 # The URL the site will be built for
-base_url = "https://rattle-away.com"
+base_url = "https://rattle-on.com"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
@@ -8,7 +8,7 @@ compile_sass = true
 build_search_index = false
 
 theme = "lightspeed"
-title = "Rattle away"
+title = "Rattle on"
 description = "A dump of rants, ideas and explanations. Writing is nature's way of telling us how lousy our thinking is."
 highlight_theme = "solarized-dark"
 
